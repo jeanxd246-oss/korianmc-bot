@@ -1,0 +1,184 @@
+{
+  "bot": {
+    "name": "KorianMC Bot",
+    "description": "Bot premium para comunidades gaming y de Minecraft: tickets, niveles, economía, sorteos e IA.",
+    "prefixes": ["!", "/"],
+    "color": "#5865F2",
+    "language": "es",
+    "invite_permissions": 2772931072,
+    "website": "https://korianmc.example"
+  },
+  "defaults": {
+    "appearance": {
+      "color": "#5865F2"
+    },
+    "channels": {
+      "logs": "1560096028546564127",
+      "welcome": "1552370341895077918",
+      "tickets": "",
+      "ticket_logs": "",
+      "levels": "",
+      "points": "",
+      "suggestions": "",
+      "polls": "",
+      "giveaways": "",
+      "reports": "",
+      "applications": "",
+      "ai_support": "",
+      "moderation": "",
+      "verification": ""
+    },
+    "categories": {
+      "tickets": ""
+    },
+    "roles": {
+      "admin": [],
+      "staff": ["1562252845124820992", "1560004989408247848"],
+      "mute": "",
+      "autorole": "",
+      "verification": "",
+      "creator": "",
+      "booster": "",
+      "level": ["", "", "", "", "", "", "", "", "", ""]
+    },
+    "levels": {
+      "enabled": true,
+      "xp_min": 15,
+      "xp_max": 35,
+      "cooldown_seconds": 60,
+      "min_chars": 5,
+      "flood_limit": 5,
+      "bonus_long": 10,
+      "long_chars": 300,
+      "announce_level_up": true
+    },
+    "points": {
+      "enabled": true,
+      "per_message": 2,
+      "cooldown_seconds": 45,
+      "min_chars": 5,
+      "long_chars": 250,
+      "bonus_long": 3,
+      "welcome_bonus": 25,
+      "pay_limit": 5000
+    },
+    "automod": {
+      "enabled": true,
+      "anti_spam": true,
+      "anti_links": false,
+      "anti_invites": true,
+      "anti_caps": true,
+      "anti_massmention": true,
+      "blocked_words": [],
+      "max_mentions": 5,
+      "caps_pct": 70,
+      "caps_min": 12,
+      "spam_messages": 5,
+      "spam_window": 6,
+      "action": "delete",
+      "warn_after": 3,
+      "mute_minutes": 10
+    },
+    "antiraid": {
+      "enabled": false,
+      "max_joins": 5,
+      "window_seconds": 10,
+      "min_account_age_days": 7,
+      "raidmode": false,
+      "lock_message": "El servidor está en modo protección anti-raid. Verifícate para participar."
+    },
+    "ai": {
+      "enabled": true,
+      "personality": "cercano, breve y profesional",
+      "cooldown_seconds": 20,
+      "context_messages": 6,
+      "duplicate_window": 120,
+      "max_daily_messages": 30,
+      "escalate": true,
+      "auto_moderation": false,
+      "moderation_threshold": 0.75,
+      "support_rules": []
+    },
+    "tickets": {
+      "prefix": "ticket",
+      "cooldown_seconds": 120,
+      "require_reason": true,
+      "min_reason": 8,
+      "transcript_on_close": true,
+      "categories": [
+        {
+          "id": "soporte",
+          "label": "Soporte",
+          "emoji": "👥",
+          "description": "Ayuda general con el servidor"
+        },
+        {
+          "id": "dudas",
+          "label": "Dudas",
+          "emoji": "❓",
+          "description": "Preguntas sobre reglas, rangos o funciones"
+        },
+        {
+          "id": "problemas",
+          "label": "Problemas",
+          "emoji": "🔧",
+          "description": "Fallas técnicas, bugs o errores"
+        },
+        {
+          "id": "tienda",
+          "label": "Tienda",
+          "emoji": "🪙",
+          "description": "Compras, puntos y productos"
+        },
+        {
+          "id": "creador",
+          "label": "Postulación creador de contenido",
+          "emoji": "🎥",
+          "description": "Colaboraciones de video y streaming"
+        },
+        {
+          "id": "booster",
+          "label": "Recompensas booster",
+          "emoji": "🎉",
+          "description": "Reclamar beneficios de booster"
+        },
+        {
+          "id": "postulaciones",
+          "label": "Postulaciones",
+          "emoji": "🦺",
+          "description": "Postulaciones al equipo staff"
+        }
+      ]
+    },
+    "giveaways": {
+      "default_winners": 1,
+      "min_duration_minutes": 1,
+      "max_duration_days": 30
+    },
+    "suggestions": {
+      "allow_anonymous": false,
+      "dm_on_change": true
+    },
+    "reports": {
+      "dm_on_change": true
+    },
+    "dm_templates": {
+      "welcome": "¡Hola {user}! 👋 Bienvenido/a a **{server}**.\nEscribe `/help` para ver los comandos o abre un ticket si necesitas ayuda.",
+      "ticket_close": "Tu ticket **#{ticket}** ({category}) fue cerrado por **{staff}**.\nMotivo: {reason}",
+      "level_up": "¡Subiste al **nivel {level}** en {server}! 🎉 Tu rol ahora es {role}.",
+      "report_update": "Tu reporte **#{id}** cambió de estado a **{status}**.",
+      "reminder": "⏰ Recordatorio: {message}",
+      "verification": "✅ Verificación completada en **{server}**. Ya puedes participar."
+    },
+    "payments": {
+      "provider": "none",
+      "currency": "EUR"
+    },
+    "info": {
+      "ip": "",
+      "website": "",
+      "description": "",
+      "motd": ""
+    }
+  }
+}

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KorianMC · Panel de control</title>
+<style>
+  :root {
+    --bg: #0b0d13;
+    --panel: #12151f;
+    --panel-2: #171b28;
+    --line: #242a3d;
+    --text: #e7eaf3;
+    --muted: #8d95ad;
+    --brand: #5865F2;
+    --ok: #2ecc71;
+    --warn: #f1c40f;
+    --bad: #e74c3c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: radial-gradient(1200px 600px at 20% -10%, #171c33 0%, var(--bg) 55%);
+    color: var(--text); font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    min-height: 100vh;
+  }
+  header {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 18px 26px; border-bottom: 1px solid var(--line);
+    background: rgba(18, 21, 31, .85); backdrop-filter: blur(8px);
+    position: sticky; top: 0; z-index: 5;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: .4px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--brand); box-shadow: 0 0 12px var(--brand); }
+  .brand small { display: block; color: var(--muted); font-weight: 400; font-size: 12px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 26px 20px 60px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+  .card {
+    background: linear-gradient(160deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--line); border-radius: 14px; padding: 16px;
+  }
+  .card .value { font-size: 26px; font-weight: 700; margin-top: 6px; }
+  .card .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .8px; }
+  section { margin-top: 28px; }
+  h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin: 0 0 12px; }
+  table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  th, td { text-align: left; padding: 11px 14px; font-size: 14px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .6px; }
+  tr:last-child td { border-bottom: none; }
+  .tag { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; background: #1e2437; border: 1px solid var(--line); }
+  .tag.brand { background: rgba(88,101,242,.18); border-color: rgba(88,101,242,.5); color: #aab2ff; }
+  button {
+    background: var(--brand); border: 0; color: #fff; padding: 10px 16px; border-radius: 10px;
+    font-weight: 600; cursor: pointer;
+  }
+  button.ghost { background: transparent; border: 1px solid var(--line); color: var(--muted); }
+  button:hover { filter: brightness(1.08); }
+  #login {
+    max-width: 420px; margin: 12vh auto; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 16px; padding: 28px;
+  }
+  #login h1 { margin: 0 0 6px; font-size: 20px; }
+  #login p { color: var(--muted); font-size: 14px; margin: 0 0 18px; }
+  input[type="password"] {
+    width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line);
+    background: #0d1017; color: var(--text); font-size: 15px; margin-bottom: 14px;
+  }
+  input:focus { outline: 1px solid var(--brand); }
+  .error { color: var(--bad); font-size: 13px; min-height: 18px; margin-bottom: 8px; }
+  .muted { color: var(--muted); font-size: 13px; }
+  .row { display: flex; gap: 10px; align-items: center; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<div id="login">
+  <h1>🔐 Acceso al panel</h1>
+  <p>Introduce el valor de <code>PANEL_TOKEN</code> definido en el archivo <code>.env</code> del bot.</p>
+  <div class="error" id="loginError"></div>
+  <input type="password" id="token" placeholder="Token de acceso" autocomplete="current-password">
+  <button id="loginBtn">Entrar</button>
+</div>
+
+<div id="app" class="hidden">
+  <header>
+    <div class="brand">
+      <span class="dot"></span>
+      <div>KorianMC · Panel de control <small id="botLine">Conectando…</small></div>
+    </div>
+    <div class="row">
+      <span class="tag brand" id="updated">—</span>
+      <button class="ghost" id="refreshBtn">Actualizar</button>
+      <button class="ghost" id="logoutBtn">Salir</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid" id="stats"></div>
+
+    <section>
+      <h2>🏆 Top de puntos</h2>
+      <table><thead><tr><th>#</th><th>Usuario</th><th>Puntos</th><th>Nivel</th></tr></thead>
+      <tbody id="topBody"><tr><td colspan="4" class="muted">Sin datos</td></tr></tbody></table>
+    </section>
+
+    <section>
+      <h2>📜 Últimos eventos</h2>
+      <table><thead><tr><th>Fecha</th><th>Evento</th><th>Detalle</th></tr></thead>
+      <tbody id="logBody"><tr><td colspan="3" class="muted">Sin datos</td></tr></tbody></table>
+    </section>
+
+    <section>
+      <h2>⚠️ Últimos errores técnicos</h2>
+      <table><thead><tr><th>Fecha</th><th>Contexto</th><th>Mensaje</th></tr></thead>
+      <tbody id="errorBody"><tr><td colspan="3" class="muted">Sin errores registrados 🎉</td></tr></tbody></table>
+    </section>
+
+    <p class="muted" style="margin-top:26px">
+      Este panel es de <strong>solo lectura</strong>. Los datos se actualizan cada minuto
+      desde la base SQLite del bot.
+    </p>
+  </main>
+</div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const hide = (el) => el.classList.add("hidden");
+  const show = (el) => el.classList.remove("hidden");
+
+  async function api(path, options) {
+    const res = await fetch(path, Object.assign({ headers: { "Content-Type": "application/json" } }, options || {}));
+    let data = null;
+    try { data = await res.json(); } catch (e) { data = null; }
+    if (res.status === 401 && path !== "/api/login") { showLogin("Tu sesión caducó. Vuelve a entrar."); throw new Error("401"); }
+    if (!res.ok) throw new Error((data && data.error) || res.statusText);
+    return data;
+  }
+
+  function showLogin(message) {
+    hide($("app"));
+    show($("login"));
+    $("loginError").textContent = message || "";
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? "" : value).replace(/[&<>"']/g, (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  function formatUptime(seconds) {
+    const d = Math.floor(seconds / 86400), h = Math.floor((seconds % 86400) / 3600),
+      m = Math.floor((seconds % 3600) / 60), s = seconds % 60;
+    if (d) return `${d}d ${h}h`;
+    if (h) return `${h}h ${m}m`;
+    return `${m}m ${s}s`;
+  }
+
+  function render(data) {
+    $("botLine").textContent = `${data.bot.nombre} · ID ${data.bot.id} · uptime ${formatUptime(data.bot.uptime_segundos)}`;
+    $("updated").textContent = "Actualizado " + (data.generado || "").replace("T", " ");
+
+    $("stats").innerHTML = Object.entries(data.recuentos || {}).map(([key, value]) =>
+      `<div class="card"><div class="label">${escapeHtml(key)}</div><div class="value">${escapeHtml(value)}</div></div>`
+    ).join("");
+
+    const top = data.top_puntos || [];
+    $("topBody").innerHTML = top.length
+      ? top.map((row, i) => `<tr><td>${i + 1}</td><td>&lt;@${escapeHtml(row.usuario)}&gt;</td><td>${escapeHtml(row.puntos)}</td><td>${escapeHtml(row.nivel)}</td></tr>`).join("")
+      : '<tr><td colspan="4" class="muted">Sin datos</td></tr>';
+
+    const logs = data.ultimos_logs || [];
+    $("logBody").innerHTML = logs.length
+      ? logs.map((row) => `<tr><td class="muted">${escapeHtml(row.fecha)}</td><td><span class="tag">${escapeHtml(row.evento)}</span></td><td>${escapeHtml(row.detalle || "")}</td></tr>`).join("")
+      : '<tr><td colspan="3" class="muted">Sin datos</td></tr>';
+
+    const errors = data.ultimos_errores || [];
+    $("errorBody").innerHTML = errors.length
+      ? errors.map((row) => `<tr><td class="muted">${escapeHtml(row.fecha)}</td><td>${escapeHtml(row.contexto)}</td><td>${escapeHtml(row.mensaje)}</td></tr>`).join("")
+      : '<tr><td colspan="3" class="muted">Sin errores registrados 🎉</td></tr>';
+  }
+
+  async function load() {
+    try {
+      render(await api("/api/data"));
+    } catch (error) {
+      if ($("app").classList.contains("hidden")) return;
+      $("updated").textContent = "Sin datos: " + error.message;
+    }
+  }
+
+  $("loginBtn").addEventListener("click", async () => {
+    $("loginError").textContent = "";
+    try {
+      await api("/api/login", { method: "POST", body: JSON.stringify({ token: $("token").value }) });
+      $("token").value = "";
+      hide($("login"));
+      show($("app"));
+      load();
+    } catch (error) {
+      $("loginError").textContent = error.message || "No se pudo iniciar sesión.";
+    }
+  });
+
+  $("token").addEventListener("keydown", (event) => {
+    if (event.key === "Enter") $("loginBtn").click();
+  });
+
+  $("logoutBtn").addEventListener("click", async () => {
+    try { await api("/api/logout", { method: "POST" }); } catch (e) { /* sesión ya cerrada */ }
+    showLogin("");
+  });
+
+  $("refreshBtn").addEventListener("click", load);
+
+  (async function boot() {
+    try {
+      await api("/api/data");
+      hide($("login"));
+      show($("app"));
+      load();
+    } catch (error) {
+      showLogin("");
+    }
+  })();
+
+  setInterval(load, 30000);
+</script>
+</body>
+</html>

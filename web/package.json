@@ -1,0 +1,16 @@
+{
+  "name": "korianmc-panel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Panel de administración web de KorianMC Bot (solo lectura, con autenticación por token)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "4.19.2"
+  }
+}
